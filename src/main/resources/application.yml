@@ -11,7 +11,7 @@ spring:
     time-zone: Asia/Shanghai
 
 server:
-  port: 9000
+  port: 9090
   servlet:
     context-path: /base-show
 
