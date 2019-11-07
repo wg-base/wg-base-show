@@ -88,10 +88,18 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer updateCustomer(CustomerUpdateBean customerUpdateBean) {
         Customer customer = customerRepository.getById(customerUpdateBean.getId());
-        customer.setCustomerName(customerUpdateBean.getCustomerName());
-        customer.setPassword(customerUpdateBean.getPassword());
-        customer.setAge(customerUpdateBean.getAge());
-        customer.setPhone(customerUpdateBean.getPhone());
+        if(customerUpdateBean.getCustomerName()!=null){
+            customer.setCustomerName(customerUpdateBean.getCustomerName());
+        }
+        if(customerUpdateBean.getPassword()!=null){
+            customer.setPassword(customerUpdateBean.getPassword());
+        }
+        if(customerUpdateBean.getAge()!=null){
+            customer.setAge(customerUpdateBean.getAge());
+        }
+        if(customerUpdateBean.getPhone()!=null){
+            customer.setPhone(customerUpdateBean.getPhone());
+        }
         return customerRepository.save(customer);
     }
 
