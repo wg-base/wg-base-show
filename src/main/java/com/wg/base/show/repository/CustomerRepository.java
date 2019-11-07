@@ -8,4 +8,6 @@ public interface CustomerRepository extends JpaRepository<Customer,Long>,
         QuerydslPredicateExecutor<Customer> {
 
     Customer getById(Long id);
+
+    Customer getByCustomerName(String customerName);
 }

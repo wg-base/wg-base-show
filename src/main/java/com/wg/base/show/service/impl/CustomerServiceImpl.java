@@ -36,6 +36,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer addCustomer(CustomerAddBean customerAddBean) {
+        if(customerRepository.getByCustomerName(customerAddBean.getCustomerName())!=null){
+            throw new LogicException(ResultMessage.USER_EXIST);
+        }
         customerAddBean.setPassword(Md5Utils.generate(customerAddBean.getPassword()));
         Customer customer = new Customer(customerAddBean);
         Customer returnCustomer = customerRepository.saveAndFlush(customer);

@@ -2,11 +2,14 @@ package com.wg.base.show.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.wg.base.show.controller.bean.CustomerAddBean;
+import com.wg.base.show.controller.bean.CustomerUpdateBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.ContextHierarchy;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -18,21 +21,9 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-//@WebAppConfiguration：测试环境使用，用来表示测试环境使用的ApplicationContext将是WebApplicationContext类型的；value指定web应用的根；
-@WebAppConfiguration()
-//@ContextHierarchy：指定容器层次
-/*@ContextHierarchy({
-        @ContextConfiguration(locations = {
-                "classpath:applicationContext.xml" //这里的applicationContext.xml文件，如果有特殊的bean需要配置，则需要放在src/test/resources目录下
-        }),
-        @ContextConfiguration({
-                "classpath:spring-mvc.xml"
-        })
-})*/
+@SpringBootTest
+@TestExecutionListeners(listeners = DependencyInjectionTestExecutionListener.class)
 public class CustomerControllerTest extends AbstractTestNGSpringContextTests {
-
-    private static String baseUrl = "";
-    private static String addCustomerUrl = "";
 
     @Autowired
     private WebApplicationContext wac;
@@ -45,7 +36,6 @@ public class CustomerControllerTest extends AbstractTestNGSpringContextTests {
 
     @BeforeClass
     public void setUp() {
-        //MockMvcBuilders.webAppContextSetup(wac).build()创建一个MockMvc进行测试
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
     private void executeSql(String sqlPath) {
@@ -54,51 +44,90 @@ public class CustomerControllerTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void testAddCustomer() throws Exception {
-        String param="{\n" +
-                "  \"age\": 27,\n" +
-                "  \"customerName\": \"wang15\",\n" +
-                "  \"password\": \"123454566\",\n" +
-                "  \"phone\": \"18332555553\"\n" +
-                "}";
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/customer/add",param))//perform用于执行一个请求
-                .andDo(MockMvcResultHandlers.print())  //增加一个结果处理器
-                .andExpect(MockMvcResultMatchers.status().isOk()) //执行完成后的断言
-                .andReturn(); //执行完成后返回相应的结果
+        CustomerAddBean customerAddBean = new CustomerAddBean();
+        customerAddBean.setAge(27);
+        customerAddBean.setCustomerName("wangliheng22");
+        customerAddBean.setPassword("1222222");
+        customerAddBean.setPhone("18332555233");
+        String requestJson = JSONObject.toJSONString(customerAddBean);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/customer").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
         String content = result.getResponse().getContentAsString();
         JSONObject jsonObject = JSON.parseObject(content);
-        //采用Asser的方式进行断言
-        Assert.assertEquals(jsonObject.get("code"), "0");
+        Assert.assertEquals(jsonObject.get("code"),0);
     }
 
     @Test
     public void testGetCustomer() throws Exception {
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/customer/1"))//perform用于执行一个请求
-                .andDo(MockMvcResultHandlers.print())  //增加一个结果处理器
-                .andExpect(MockMvcResultMatchers.status().isOk()) //执行完成后的断言
-                .andReturn(); //执行完成后返回相应的结果
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/customer/1"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
         String content = result.getResponse().getContentAsString();
         JSONObject jsonObject = JSON.parseObject(content);
-        //采用Asser的方式进行断言
-        Assert.assertEquals(jsonObject.get("code"), "0");
+        Assert.assertEquals(jsonObject.get("code"),0);
+    }
+
+    @Test(dependsOnMethods = "testAddCustomer")
+    public void testLogin() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/customer/login?userName=wangliheng&password=123456"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        JSONObject jsonObject = JSON.parseObject(content);
+        Assert.assertEquals(jsonObject.get("code"),0);
     }
 
     @Test
-    public void testLogin() {
+    public void testGetCustomerAll() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/customer/all"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        JSONObject jsonObject = JSON.parseObject(content);
+        Assert.assertEquals(jsonObject.get("code"),0);
     }
 
     @Test
-    public void testGetCustomerAll() {
+    public void testGetCustomerPage() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/customer/list?pageNumber=1&pageSize=10" +
+                "&ageStart=20&ageEnd=30&customerName=wangliheng1"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        JSONObject jsonObject = JSON.parseObject(content);
+        Assert.assertEquals(jsonObject.get("code"),0);
     }
 
     @Test
-    public void testGetCustomerPage() {
+    public void testUpdateCustomer() throws Exception {
+        CustomerUpdateBean customerUpdateBean = new CustomerUpdateBean();
+        customerUpdateBean.setId(1L);
+        customerUpdateBean.setCustomerName("wangliheng");
+        customerUpdateBean.setPhone("18332555233");
+        String json = JSONObject.toJSONString(customerUpdateBean);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/customer").contentType(MediaType.APPLICATION_JSON).content(json))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        JSONObject jsonObject = JSON.parseObject(content);
+        Assert.assertEquals(jsonObject.get("code"),0);
     }
 
     @Test
-    public void testUpdateCustomer() {
-    }
-
-    @Test
-    public void testDeleteCustomer() {
+    public void testDeleteCustomer() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/customer/2"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        JSONObject jsonObject = JSON.parseObject(content);
+        Assert.assertEquals(jsonObject.get("code"),0);
     }
 }

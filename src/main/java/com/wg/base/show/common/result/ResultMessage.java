@@ -17,6 +17,7 @@ public class ResultMessage {
     public static ResultMessage TOKEN_INVALID_ERROR=new ResultMessage(50007,"token错误或已失效");
     public static ResultMessage MESSAGE_EMPTY_ERROR=new ResultMessage(50008,"信息内容为空");
     public static ResultMessage MOBILE_FREQUENTLY_ERROR=new ResultMessage(50009,"一分钟后重试");
+    public static ResultMessage USER_EXIST=new ResultMessage(50010,"用户已存在");
 
     public ResultMessage fillArgs(Object...args){
         int code=this.code;
