@@ -72,8 +72,8 @@ public class CustomerController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header",dataType = "String", name ="access_token", value ="token",required = true),
             @ApiImplicitParam(paramType = "query",dataType = "String", name ="customerName", value ="用户名称"),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer", name ="ageStart", value ="年龄范围"),
-            @ApiImplicitParam(paramType = "query",dataType = "Integer", name ="ageEnd", value ="年龄范围")
+            @ApiImplicitParam(paramType = "query",dataType = "int", name ="ageStart", value ="年龄范围"),
+            @ApiImplicitParam(paramType = "query",dataType = "int", name ="ageEnd", value ="年龄范围")
     })
     public Result<QueryResults<Customer>> getCustomerPage(BasePageable basePageable, String customerName, Integer ageStart, Integer ageEnd){
         return Result.success(customerService.getCustomerByPage(basePageable,customerName,ageStart,ageEnd));
