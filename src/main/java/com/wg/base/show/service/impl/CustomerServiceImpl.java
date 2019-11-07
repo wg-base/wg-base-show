@@ -44,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer getCustomerById(Long id) {
-        return customerRepository.getOne(id);
+        return customerRepository.getById(id);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer updateCustomer(CustomerUpdateBean customerUpdateBean) {
-        Customer customer = customerRepository.getOne(customerUpdateBean.getId());
+        Customer customer = customerRepository.getById(customerUpdateBean.getId());
         customer.setCustomerName(customerUpdateBean.getCustomerName());
         customer.setPassword(customerUpdateBean.getPassword());
         customer.setAge(customerUpdateBean.getAge());
@@ -97,6 +97,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void deleteCustomer(Long id) {
-        customerRepository.deleteById(id);
+        if(customerRepository.getById(id)!=null){
+            customerRepository.deleteById(id);
+        }
     }
 }

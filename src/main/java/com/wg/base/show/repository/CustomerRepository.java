@@ -6,4 +6,6 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 public interface CustomerRepository extends JpaRepository<Customer,Long>,
         QuerydslPredicateExecutor<Customer> {
+
+    Customer getById(Long id);
 }
