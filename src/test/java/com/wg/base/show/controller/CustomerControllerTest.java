@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -23,7 +22,7 @@ import org.testng.annotations.Test;
 
 @SpringBootTest
 @TestExecutionListeners(listeners = DependencyInjectionTestExecutionListener.class)
-public class CustomerControllerTest extends AbstractTestNGSpringContextTests {
+public class CustomerControllerTest extends BaseTest {
 
     @Autowired
     private WebApplicationContext wac;
@@ -31,7 +30,7 @@ public class CustomerControllerTest extends AbstractTestNGSpringContextTests {
 
     CustomerControllerTest() {
         executeSql("sql/mysql/schema.sql");
-        executeSql("sql/mysql/import-data.sql");
+        executeSql("sql/m+=-0954 +  ysql/import-data.sql");
     }
 
     @BeforeClass
@@ -46,7 +45,7 @@ public class CustomerControllerTest extends AbstractTestNGSpringContextTests {
     public void testAddCustomer() throws Exception {
         CustomerAddBean customerAddBean = new CustomerAddBean();
         customerAddBean.setAge(27);
-        customerAddBean.setCustomerName("wangliheng22");
+        customerAddBean.setCustomerName("wangliheng28");
         customerAddBean.setPassword("1222222");
         customerAddBean.setPhone("18332555233");
         String requestJson = JSONObject.toJSONString(customerAddBean);
@@ -56,8 +55,7 @@ public class CustomerControllerTest extends AbstractTestNGSpringContextTests {
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         JSONObject jsonObject = JSON.parseObject(content);
-        int code = Integer.parseInt(jsonObject.get("code").toString());
-        Assert.assertTrue(code==0||code==50010);
+        Assert.assertEquals(jsonObject.get("code"),0);
     }
 
     @Test
@@ -73,14 +71,13 @@ public class CustomerControllerTest extends AbstractTestNGSpringContextTests {
 
     @Test(dependsOnMethods = "testAddCustomer")
     public void testLogin() throws Exception {
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/customer/login?userName=wangliheng&password=123456"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/customer/login?userName=wangliheng25&password=1222222"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         JSONObject jsonObject = JSON.parseObject(content);
-        int code = Integer.parseInt(jsonObject.get("code").toString());
-        Assert.assertTrue(code==0||code==50005);
+        Assert.assertEquals(jsonObject.get("code"),0);
     }
 
     @Test
