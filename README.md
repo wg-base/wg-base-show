@@ -53,7 +53,7 @@
  ##### @Test下的属性
  
  - 忽略测试  **@Test(enabled=false)**
- - 超时测试  **@Test(timeOut = 5000) **
- - 分组测试  **@Test(groups="group1") **
- - 依赖测试  **@Test(dependsOnMethods= {"TestNgLearn1"}) **，**@Test(dependsOnGroups = { "init.*" }) **
+ - 超时测试  **@Test(timeOut = 5000)**
+ - 分组测试  **@Test(groups="group1")**
+ - 依赖测试  **@Test(dependsOnMethods= {"TestNgLearn1"})，@Test(dependsOnGroups = { "init.\*" })**
  
