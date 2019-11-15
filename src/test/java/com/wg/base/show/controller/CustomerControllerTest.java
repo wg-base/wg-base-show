@@ -7,8 +7,6 @@ import com.wg.base.show.controller.bean.CustomerUpdateBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -21,7 +19,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @SpringBootTest
-@TestExecutionListeners(listeners = DependencyInjectionTestExecutionListener.class)
 public class CustomerControllerTest extends BaseTest {
 
     @Autowired
@@ -30,7 +27,7 @@ public class CustomerControllerTest extends BaseTest {
 
     CustomerControllerTest() {
         executeSql("sql/mysql/schema.sql");
-        executeSql("sql/m+=-0954 +  ysql/import-data.sql");
+        executeSql("sql/mysql/import-data.sql");
     }
 
     @BeforeClass
@@ -38,7 +35,7 @@ public class CustomerControllerTest extends BaseTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
     private void executeSql(String sqlPath) {
-        // todo 执行sql文件
+        // todo JDBC 执行sql文件
     }
 
     @Test
